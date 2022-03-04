@@ -15,7 +15,7 @@ void Base::foo() // 定義にはvirtualは書かない
 class Derived : public Base
 {
 public:
-	void foo() override; // 派生くらすでメンバー関数をoverride
+	void foo() override; // 派生クラスでメンバー関数をoverride
 	// void foo(int i) override; // エラー。対応する仮想関数が規定クラスにない
 	void foo(int i); // OK。単なるオーバーロードは追加できる
 };
