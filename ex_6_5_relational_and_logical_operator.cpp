@@ -10,31 +10,31 @@ public:
 	{
 	}
 
-	bool operator == (int a, int b) const;
-	bool operator != (int a, int b) const;
-	bool operator <= (int a, int b) const;
-	bool operator > (int a, int b) const;
-	bool operator >= (int a, int b) const;
+	bool operator == (const Integer& rhs) const;
+	bool operator != (const Integer& rhs) const;
+	bool operator <= (const Integer& rhs) const;
+	bool operator > (const Integer& rhs) const;
+	bool operator >= (const Integer& rhs) const;
 };
 
-bool Integer::operator == (int a, int b) const
+bool Integer::operator == (const Integer& rhs) const
 {
-	return !(a < b) && !(b < a);
+	return !(this->value < rhs.value) && !(rhs.value < this->value);
 }
 
-bool Integer::operator != (int a, int b) const
+bool Integer::operator != (const Integer& rhs) const
 {
-	return (a < b) || (b < a);
+	return (this->value < rhs.value) || (rhs.value < this->value);
 }
 
-bool Integer::operator <= (int a, int b) const
+bool Integer::operator <= (const Integer& rhs) const
 {
-	return !(b < a);
+	return !(rhs.value < this->value);
 }
 
-bool Integer::operator >= (int a, int b) const
+bool Integer::operator >= (const Integer& rhs) const
 {
-	return !(a < b);
+	return !(this->value < rhs.value);
 }
 
 int main()
@@ -50,6 +50,15 @@ int main()
 	else
 	{
 		std::cout << "x == y is false" << std::endl;
+	}
+
+	if (x != y)
+	{
+		std::cout << "x != y is true" << std::endl;
+	}
+	else
+	{
+		std::cout << "X != y is false" << std::endl;
 	}
 }
 
