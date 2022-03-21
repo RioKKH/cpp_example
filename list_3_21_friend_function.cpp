@@ -32,7 +32,7 @@ vector3d::vector3d(float x, float y, float z)
 vector3d add(const vector3d& lhs, const vector3d& rhs)
 {
 	vector3d result;
-	// メンバー関数出ないが非公開メンバーにアクセスすることができる
+	// メンバー関数でないが非公開メンバーにアクセスすることができる
 	result.x = lhs.x + rhs.x;
 	result.y = lhs.y + rhs.y;
 	result.z = lhs.z + rhs.z;
