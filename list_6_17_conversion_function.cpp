@@ -5,14 +5,14 @@
 class heap
 {
 private:
-	int* i:
+	int* i;
 
 public:
 		heap() : i{nullptr}
 		{
 		}
 
-		~heap();
+		~heap()
 		{
 			delete i;
 		}
@@ -30,3 +30,35 @@ bool heap::create()
 	{
 		return false;
 	}
+
+	i = new int{};
+	*i = 0;
+	return true;
+}
+
+heap::operator bool () const // (と)を合わせて()で変換関数演算子
+{
+	return i != nullptr;
+}
+
+int main()
+{
+	heap h;
+
+	if (!h)
+	{
+		std::cout << "変換関数がfalseを返しました" << std::endl;
+	}
+
+	std::cout << "heap::create()呼び出し" << std::endl;
+	h.create();
+
+	if (!h)
+	{
+		std::cout << "変換関数がfalseを返しました" << std::endl;
+	}
+
+	std::cout << "終了" << std::endl;
+
+	return 0;
+}
