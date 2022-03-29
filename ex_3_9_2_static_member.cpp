@@ -1,6 +1,6 @@
 #include <iostream>
 
-class S
+class A
 {
 	static int counter; // static メンバー変数の宣言
 
@@ -21,3 +21,12 @@ int A::get_counter()
 {
 	return counter;
 }
+
+int main()
+{
+    A a1; // counter = 1
+    std::cout << a1.get_counter() << std::endl;
+    A a2; // counter = 2
+    std::cout << a2.get_counter() << std::endl;
+}
+
