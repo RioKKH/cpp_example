@@ -29,6 +29,7 @@ void move(T&& value)
 }
 
 // 完全転送
+// 完全転送とはstd::forward()関数を使って右辺値と左辺値を区別した関数呼び出しのこと
 template <typename T>
 void forward(T&& value)
 {
