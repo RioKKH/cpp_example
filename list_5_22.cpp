@@ -7,11 +7,11 @@ int main()
 
 	if (i == 0)
 	{
-		std::cout << "1 == 0" << std::endl;
+		std::cout << "i == 0" << std::endl;
 	}
 	else
 	{
-		std::cout << "1 != 0" << std::endl;
+		std::cout << "i != 0" << std::endl;
 	}
 
 	return 0;
