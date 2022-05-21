@@ -71,12 +71,16 @@ int person::age() const
 int main()
 {
 	person alice("alice", 15);
-
 	person copy(alice); // コピーコンストラクター呼び出し
-	std::cout << copy.name() << std::endl;
-	std::cout << alice.name() << std::endl;
 
+    std::cout << "今はどっちもalice" << std::endl;
+	std::cout << "alice: " << alice.name() << std::endl;
+	std::cout << "copy: " << copy.name() << std::endl;
+
+    std::cout << std::endl;
+
+    std::cout << "コピーコンストラクタでコピーされたオブジェクトにeggを代入する" << std::endl;
 	copy.set_name("egg");
-	std::cout << copy.name() << std::endl; // egg <-- aliceとは別オブジェクトである
-	std::cout << alice.name() << std::endl; // alice
+	std::cout << "alice: " << alice.name() << std::endl; // alice
+	std::cout << "copy: " << copy.name() << std::endl; // egg <-- aliceとは別オブジェクトである
 }
