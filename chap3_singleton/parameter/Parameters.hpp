@@ -18,7 +18,11 @@ private:
     int Nbytes = 0;
 
 
-    Parameters() = default;
+    // Parameters() = default;
+    Parameters()
+    {
+        loadParams();
+    }
     ~Parameters() = default;
 
 public:
@@ -27,11 +31,7 @@ public:
     Parameters(Parameters&&) = delete;
     Parameters& operator=(Parameters&&) = delete;
 
-    static Parameters& getInstance()
-    {
-        static Parameters instance;
-        return instance;
-    }
+    static Parameters& getInstance();
 
     void loadParams();
     int getPopsize();

@@ -19,7 +19,10 @@ build: ${APPS}
 Parameters.o: Parameters.cpp Parameters.hpp
 	$(NVCC) $(NVCC_OPTIONS) -o $@ -c $<
 
-main : main.cpp Parameters.o
+CUDAkernel.o: CUDAkernel.cpp CUDAkernel.hpp
+	$(NVCC) $(NVCC_OPTIONS) -o $@ -c $<
+
+main : main.cpp Parameters.o CUDAkernel.o
 	$(NVCC) $(NVCC_OPTIONS) $^ -o $@
 
 run: build

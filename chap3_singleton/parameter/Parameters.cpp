@@ -5,6 +5,11 @@
 #include "Parameters.hpp"
 #include "GAregex.hpp"
 
+Parameters& Parameters::getInstance()
+{
+    static Parameters instance;
+    return instance;
+}
 
 void Parameters::loadParams()
 {
