@@ -12,7 +12,7 @@ public:
 
 void A::set_value(int value)
 {
-	// value = value // エラーではないが、どちらも引数のvalueのこと
+	// value = value; // エラーではないが、どちらも引数のvalueのこと
 	this->value = value; // メンバー変数のvalueに代入している
 }
 
