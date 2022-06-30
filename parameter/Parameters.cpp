@@ -2,6 +2,7 @@
 #include <fstream>
 #include <string>
 #include <regex>
+#include <unistd.h>
 
 #include "Parameters.hpp"
 #include "Tools.hpp"
@@ -9,6 +10,8 @@
 Parameters::Parameters()
 {
 	std::cout << "Constructor of Parameters" << std::endl;
+    char cwd[512];
+    CWD = getcwd(cwd, 512);
 }
 
 Parameters::Parameters(std::string PATH)
@@ -35,7 +38,7 @@ Parameters::~Parameters()
 
 void Parameters::loadParams()
 {
-	const std::string INFILE = "/home/kakehi/work/git/cpp_example/parameter/test.prms";
+	const std::string INFILE = CWD + "/" + PRMSNAME;
 	std::ifstream infile(INFILE);
 	std::string line;
 	// std::smatch results;

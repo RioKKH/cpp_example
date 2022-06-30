@@ -18,8 +18,8 @@ int main(int argc, char *argv[])
 	std::unique_ptr<Data> ref(new Data);
 	ref->loadData();
 	ref->show();
-    ref->showX();
-    ref->showY();
+    // ref->showX();
+    // ref->showY();
 
 	return 0;
 }

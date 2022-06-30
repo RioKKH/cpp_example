@@ -9,7 +9,10 @@
 class Parameters
 {
 private:
+    const std::string PRMSNAME = "test.prms";
+    std::string CWD;
 	std::string PATH;
+
 	std::vector<double> X;
 	std::vector<double> Y;
 	std::vector<double> Z;

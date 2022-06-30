@@ -13,6 +13,9 @@
 class Data
 {
 private:
+    const std::string FILENAME = "data.dat";
+    std::string CWD;
+
 	std::vector<int> vX;
 	std::vector<int> vY;
 	std::vector<int> vValid;
@@ -25,7 +28,6 @@ private:
 	std::vector<double> vAverage;
 	std::vector<double> vMode;
 	std::vector<double> vMax;
-    std::string filepath;
                        
 public:
 	explicit Data();
@@ -36,6 +38,7 @@ public:
 	void show() const;
     void showX() const;
     void showY() const;
+    int getCWD();
 
 };
 
