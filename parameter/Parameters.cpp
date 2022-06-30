@@ -14,10 +14,12 @@ Parameters::Parameters()
     CWD = getcwd(cwd, 512);
 }
 
+/*
 Parameters::Parameters(std::string PATH)
 {
 	std::cout << "Constructor of Parameters" << std::endl;
 }
+*/
 
 Parameters::~Parameters()
 {

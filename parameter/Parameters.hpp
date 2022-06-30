@@ -20,7 +20,7 @@ private:
 
 public:
 	explicit Parameters();
-	explicit Parameters(std::string PATH);
+	// explicit Parameters(std::string PATH);
 	~Parameters();
 
 	// void setX(std::vector<double>);
