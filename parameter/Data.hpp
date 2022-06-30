@@ -25,14 +25,17 @@ private:
 	std::vector<double> vAverage;
 	std::vector<double> vMode;
 	std::vector<double> vMax;
+    std::string filepath;
                        
 public:
 	explicit Data();
 	~Data();
 
 	void loadData();
-	void getEnv();
+	void makeFilePath();
 	void show() const;
+    void showX() const;
+    void showY() const;
 
 };
 
