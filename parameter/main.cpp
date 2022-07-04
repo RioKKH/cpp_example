@@ -2,7 +2,7 @@
 #include <memory>
 
 #include "Parameters.hpp"
-#include "Data.hpp"
+#include "CrosstalkMap.hpp"
 
 int main(int argc, char *argv[])
 {
@@ -11,14 +11,16 @@ int main(int argc, char *argv[])
 	prms->loadParams();
 	prms->show();
 
-	std::unique_ptr<Data> ref(new Data);
-    std::unique_ptr<Data> meas(new Data);
+	std::unique_ptr<CrosstalkMap> ref(new CrosstalkMap);
+    std::unique_ptr<CrosstalkMap> meas(new CrosstalkMap);
 	ref->loadData();
-	ref->show();
+	// ref->show_raw_data();
+	ref->getFourCorners();
+	ref->trimData();
+
     meas->loadData();
-    meas->show();
-    // ref->showX();
-    // ref->showY();
+    // meas->show_raw_data();
+	ref->getFourCorners();
 
 	return 0;
 }

@@ -13,13 +13,13 @@ all: ${TARGET}
 Parameters.o: Parameters.cpp
 	${GPP} ${GPP_OPTIONS} -o $@ -c $<
 
-Data.o: Data.cpp
+CrosstalkMap.o: CrosstalkMap.cpp
 	${GPP} ${GPP_OPTIONS} -o $@ -c $<
 
 Tools.o: Tools.cpp
 	${GPP} ${GPP_OPTIONS} -o $@ -c $<
 
-prmtest : main.cpp Parameters.o Tools.o Data.o
+prmtest : main.cpp Parameters.o Tools.o CrosstalkMap.o
 	${GPP} ${GPP_OPTIONS} $^ -o $@
 
 clean:

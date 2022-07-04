@@ -1,5 +1,5 @@
-#ifndef DATA_HPP
-#define DATA_HPP
+#ifndef MAP_HPP
+#define MAP_HPP
 
 #include <iostream>
 #include <vector>
@@ -10,12 +10,7 @@
 //stXtalkData stxtalkdata; 
 
 
-class Data
-{
-private:
-    const std::string FILENAME = "data.dat";
-    std::string CWD;
-
+typedef struct _data {
 	std::vector<int> vX;
 	std::vector<int> vY;
 	std::vector<int> vValid;
@@ -28,18 +23,32 @@ private:
 	std::vector<double> vAverage;
 	std::vector<double> vMode;
 	std::vector<double> vMax;
-                       
+} Data;
+
+
+class CrosstalkMap
+{
+private:
+    const std::string FILENAME = "data.dat";
+    std::string CWD;
+
+	std::vector<int> invalidx;
+	std::vector<int> invalidy;
+
+	Data raw; 
+	Data trimmed;
+
 public:
-	explicit Data();
-	~Data();
+	explicit CrosstalkMap();
+	~CrosstalkMap();
 
 	void loadData();
-	void makeFilePath();
-	void show() const;
-    void showX() const;
-    void showY() const;
-    int getCWD();
+	void show_raw_data() const;
+	void show_trimmed_data() const;
 
+	void getFourCorners();
+	void trimData();
+	void shift();
 };
 
-#endif // DATA_HPP
+#endif // MAP_HPP
