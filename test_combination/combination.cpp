@@ -6,7 +6,7 @@ int main()
 {
     // int n, r;
     // std::cin >> n >> r;
-    int n = 18;
+    int n = 5;
     int r = 2;
 
     std::vector<bool> v(n);
@@ -15,6 +15,7 @@ int main()
     do {
         for (int i = 0; i < n; ++i)
         {
+            // std::cout << v[i] << " ";
             if (v[i])
             {
                 std::cout << (i + 1) << " ";
