@@ -83,5 +83,8 @@ int main(int argc, char* argv[])
     printf("post\n");
     // cudaGenerateRandomNumberKernel<<<mMultiProcessorCount * 2, THREADS_NUM>>>(pdev_rand1, pdev_rand2, N);
 
+    cudaFree(pdev_rand1);
+    cudaFree(pdev_rand2);
+
     return 0;
 }
