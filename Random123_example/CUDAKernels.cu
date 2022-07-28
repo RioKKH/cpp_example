@@ -1,5 +1,6 @@
+#include <cuda.h>
 #include "Random123/philox.h"
-
+#include "CUDAKernels.hpp"
 
 using namespace r123;
 
@@ -18,8 +19,6 @@ typedef r123::Philox4x32 RNG_4x32;
 __device__ RNG_2x32::ctr_type generateTwoRndValues(unsigned int key,
                                                    unsigned int counter);
 
-
-
 /**
  * Device random number generator
  * 
@@ -32,18 +31,29 @@ inline __device__ RNG_2x32::ctr_type generateTwoRndValues(unsigned int key,
     return rng({0, counter}, {key});
 } // end of TwoRandomINTs
 
+
 /**
  * Initialize Population before run.
  */
-__global__ void cudaGenerateFirstPopulationKernel(unsigned int randomSeed)
+__global__ void cudaGenerateRandomNumberKernel(float *rand1,
+                                               float *rand2,
+                                               unsigned int randomSeed)
 {
-    size_t i = threadIdx.x + blockIdx.x * blockDim.x;
-    size_t stride = blockDim.x * gridDim.x;
+    int idx = threadIdx.x + blockIdx.x * blockDim.x;
 
     const int nGenes = 100;
 
-    while (i < nGenes)
+    while (idx < nGenes)
     {
-        const RNG_2x32::ctr_type randomValues = generateTwoRndValues(i, randomSeed);
+        const RNG_2x32::ctr_type randomValues = generateTwoRndValues(idx, randomSeed);
+        printf("%d,%d\n", randomValues.v[0], randomValues.v[1]);
+        rand1[idx] = randomValues.v[0];
+        rand2[idx] = randomValues.v[1];
+    }
+}
 
+__global__ void cudaTest()
+{
+    printf("hello GPU\n");
+}
 
