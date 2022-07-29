@@ -77,7 +77,7 @@ int main(int argc, char* argv[])
 
     // cudaGenerateRandomNumberKernelTest<<<mMultiProcessorCount * 2, THREADS_NUM>>>();
     printf("pre\n");
-    // cudaTest<<<1, 1>>>();
+    cudaTest<<<1, 1>>>();
     cudaGenerateRandomNumberKernel<<<10, 10>>>(pdev_rand1, pdev_rand2, N);
     cudaDeviceSynchronize();
     printf("post\n");

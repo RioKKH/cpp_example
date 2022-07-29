@@ -43,13 +43,13 @@ __global__ void cudaGenerateRandomNumberKernel(float *rand1,
 
     const int nGenes = 100;
 
-    while (idx < nGenes)
-    {
-        const RNG_2x32::ctr_type randomValues = generateTwoRndValues(idx, randomSeed);
-        printf("%d,%d\n", randomValues.v[0], randomValues.v[1]);
-        rand1[idx] = randomValues.v[0];
-        rand2[idx] = randomValues.v[1];
-    }
+    // while (idx < nGenes)
+    // {
+    const RNG_2x32::ctr_type randomValues = generateTwoRndValues(idx, randomSeed);
+    printf("%d,%d\n", randomValues.v[0], randomValues.v[1]);
+    rand1[idx] = randomValues.v[0];
+    rand2[idx] = randomValues.v[1];
+    // }
 }
 
 __global__ void cudaTest()
