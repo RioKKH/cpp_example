@@ -1,3 +1,4 @@
+#include <iostream>
 #include <stdio.h>
 #include <stdlib.h>
 #include <cuda.h>
@@ -6,7 +7,10 @@
 int main(int argc, char* argv[])
 {
     int n; // number of device
-    unsigned int N = 100;
+    int blocknum, threadnum;
+    unsigned int seed = 999;
+    unsigned int N = 1000;
+    std::cin >> blocknum >> threadnum;
 
     float *phost_rand1;
     float *phost_rand2;
@@ -14,9 +18,9 @@ int main(int argc, char* argv[])
     float *pdev_rand1;
     float *pdev_rand2;
 
-    cudaDeviceProp prop;
-    int mMultiProcessorCount;
-    int THREADS_NUM = 256;
+    // cudaDeviceProp prop;
+    // int mMultiProcessorCount;
+    // int THREADS_NUM = 256;
 
     phost_rand1 = (float *)malloc(N * sizeof(float));
     phost_rand2 = (float *)malloc(N * sizeof(float));
@@ -30,15 +34,16 @@ int main(int argc, char* argv[])
 #ifdef _DEBUG
     for (int i = 0; i < N; ++i)
     {
-        printf("%f, %f\n", phost_rand1[i], phost_rand2[i]);
+        printf("%d, %d\n", phost_rand1[i], phost_rand2[i]);
     }
 #endif // _DEBUG
 
     cudaMalloc((void **)&pdev_rand1, N * sizeof(float));
     cudaMalloc((void **)&pdev_rand2, N * sizeof(float));
 
-    cudaMemcpy(phost_rand1, pdev_rand1, N * sizeof(float), cudaMemcpyHostToDevice);
-    cudaMemcpy(phost_rand2, pdev_rand2, N * sizeof(float), cudaMemcpyHostToDevice);
+    cudaMemcpy(pdev_rand1, phost_rand1, N * sizeof(float), cudaMemcpyHostToDevice);
+    cudaMemcpy(pdev_rand2, phost_rand2, N * sizeof(float), cudaMemcpyHostToDevice); // cudaMemcpy(phost_rand1, pdev_rand1, N * sizeof(float), cudaMemcpyHostToDevice);
+    // cudaMemcpy(phost_rand2, pdev_rand2, N * sizeof(float), cudaMemcpyHostToDevice);
 
     cudaGetDeviceCount(&n);
 #ifdef _DEBUG
@@ -73,15 +78,21 @@ int main(int argc, char* argv[])
         else if (prop.computeMode == cudaComputeModeProhibited) printf("prohibited mode (no threads can be used\n)");
     }
 #endif
-    mMultiProcessorCount = prop.multiProcessorCount;
+    // mMultiProcessorCount = prop.multiProcessorCount;
 
     // cudaGenerateRandomNumberKernelTest<<<mMultiProcessorCount * 2, THREADS_NUM>>>();
-    printf("pre\n");
-    cudaTest<<<1, 1>>>();
-    cudaGenerateRandomNumberKernel<<<10, 10>>>(pdev_rand1, pdev_rand2, N);
-    cudaDeviceSynchronize();
-    printf("post\n");
+    printf("v1,v2\n");
+    // cudaTest<<<1, 1>>>();
+    cudaGenerateRandomNumberKernel<<<blocknum, threadnum>>>(pdev_rand1, pdev_rand2, seed);
     // cudaGenerateRandomNumberKernel<<<mMultiProcessorCount * 2, THREADS_NUM>>>(pdev_rand1, pdev_rand2, N);
+    cudaDeviceSynchronize();
+
+    cudaMemcpy(phost_rand1, pdev_rand1, N * sizeof(float), cudaMemcpyDeviceToHost);
+    cudaMemcpy(phost_rand2, pdev_rand2, N * sizeof(float), cudaMemcpyDeviceToHost);
+    for (int i = 0; i < N; ++i)
+    {
+        printf("%f,%f\n", phost_rand1[i], phost_rand2[i]);
+    }
 
     cudaFree(pdev_rand1);
     cudaFree(pdev_rand2);
