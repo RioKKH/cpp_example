@@ -9,7 +9,7 @@ int main(int argc, char* argv[])
     int n; // number of device
     int blocknum, threadnum;
     unsigned int seed = 999;
-    unsigned int N = 1000;
+    unsigned int N = 10;
     std::cin >> blocknum >> threadnum;
 
     float *phost_rand1;

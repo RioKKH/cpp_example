@@ -39,8 +39,8 @@ inline __device__ RNG_2x32::ctr_type generateTwoRndValues(unsigned int key,
  * Initialize Population before run.
  */
 __global__ void cudaGenerateRandomNumberKernel(float *rand1,
-                                               float *rand2,
-                                               unsigned int randomSeed)
+        float *rand2,
+        unsigned int randomSeed)
 {
     int idx = threadIdx.x + blockIdx.x * blockDim.x;
 
@@ -48,11 +48,25 @@ __global__ void cudaGenerateRandomNumberKernel(float *rand1,
 
     // while (idx < nGenes)
     // {
-    const RNG_2x32::ctr_type randomValues = generateTwoRndValues(idx, randomSeed);
-    // printf("%d,%d\n", randomValues.v[0], randomValues.v[1]);
-    // printf("%d,%d\n", randomValues.v[0]+RANDMIN, randomValues.v[1]+RANDMIN);
-    rand1[idx] = float(randomValues.v[0]) / RANDMAX;
-    rand2[idx] = float(randomValues.v[1]) / RANDMAX;
+    RNG_2x32::ctr_type randomValues;//  = generateTwoRndValues(idx, randomSeed);
+                                    // const RNG_2x32::ctr_type randomValues = generateTwoRndValues(idx, randomSeed);
+                                    // printf("%d,%d\n", randomValues.v[0], randomValues.v[1]);
+                                    // printf("%d,%d\n", randomValues.v[0]+RANDMIN, randomValues.v[1]+RANDMIN);
+    for (int i = 0; i < 5; ++i)
+    {
+        randomValues = generateTwoRndValues(idx+i, randomSeed);
+        printf("%f,%f\n", float(randomValues.v[0]) / RANDMAX,
+                float(randomValues.v[1]) / RANDMAX);
+        // rand1[idx] = float(randomValues.v[0]) / RANDMAX;
+        // rand2[idx] = float(randomValues.v[1]) / RANDMAX;
+    }
+
+    for (int i = 0; i < 5; ++i)
+    {
+        randomValues = generateTwoRndValues(idx, randomSeed+i);
+        printf("%f,%f\n", float(randomValues.v[0]) / RANDMAX,
+                          float(randomValues.v[1]) / RANDMAX);
+    }
     // rand1[idx] = float(randomValues.v[0]);
     // rand2[idx] = float(randomValues.v[1]);
     // rand1[idx] = (float(randomValues.v[0]))/(RANDMAX - RANDMIN);
