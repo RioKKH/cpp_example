@@ -12,7 +12,7 @@ NVCC_OPTIONS = -arch=sm_50
 GNUOPENMP = -fopenmp
 INTELOPEMP = -openmp
 
-APPS = rand uniform
+APPS = rand uniform return01
 
 TARGET = ${APPS}
 
@@ -33,6 +33,9 @@ CUDAKernels.o : CUDAKernels.cu
 
 rand : main.cu CUDAKernels.o
 	$(NVCC)  $(NVCC_OPTIONS) $^ -o $@
+
+return01 : return_0_or_1.cpp
+	$(CPP) $(GPP_OPTIONS) $^ -o $@
 
 uniform : uniform.cpp
 	${CPP} ${GPP_OPTIONS} $^ -o $@

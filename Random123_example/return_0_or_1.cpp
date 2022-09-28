@@ -31,7 +31,7 @@ void generateFirstPopulation(unsigned int randomSeed)
         std::int32_t k32 = randomValues.v[1];
         std::int32_t jj32 = randomValues.v[0] % 2;
         std::int32_t kk32 = randomValues.v[1] % 2;
-        printf("%d,%d,%d,%d\n", j32, jj32, k32, kk32);
+        printf("%ld,%ld,%ld,%ld\n", j32, jj32, k32, kk32);
         printf("%x,%x,%x,%x\n", j32, jj32, k32, kk32);
     }
 }
