@@ -1,20 +1,33 @@
 #include <iostream>
+#include <cstdio>
 #include <vector>
 
 int main()
 {
-    std::vector<int> LIST = {32, 64, 128, 256, 512, 1024};
+    int num = 256;
+    int CHROMOSOME = 0;
 
-    for (const auto& a : LIST)
+    int quotient  = 0;
+    int remainder = 0;
+
+    if ( (num <=  0) || ((1 << 10) < num) )
     {
-        std::cout << a << std::endl;
+        std::cout << "Invalid argument" << std::endl;
+        exit(1);
     }
-
-    for (int i = 0; i < 10; ++i)
+        
+    for (int i = 5; i <= 10; ++i)
     {
-        std::cout << (2 << i) << std::endl;
+        if (num == (1 << i))
+        {
+            CHROMOSOME = (1 << i);
+        }
+        else if (( (1 << i) < num ) && ( num < (1 << (i + 1)) ))
+        {
+            CHROMOSOME = (1 << (i + 1));
+        }
     }
-
+    std::cout << num << ":" << CHROMOSOME << std::endl;
     return 0;
 }
 
