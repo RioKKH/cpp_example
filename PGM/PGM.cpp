@@ -121,10 +121,12 @@ namespace Image
 
 Image::PGM::PGM()
 {
+	std::cout << "constructor" << std::endl;
 }
 
 Image::PGM::~PGM()
 {
+	std::cout << "destructor" << std::endl;
 	freeImage(this->img);
 }
 
@@ -265,14 +267,12 @@ image_t* Image::PGM::cloneImage()
 	{
 		memcpy(new_img->palette, this->img->palette, sizeof(color_t) * this->img->palette_num);
 	}
-	for (i = 0; i < this->img->height; ++i)
+	for (i = 0; i < this->img->height; i++)
 	{
-		memcpy(new_img->map[i], this->img->map[i], sizeof(pixel_t) * img->width);
+		memcpy(new_img->map[i], this->img->map[i], sizeof(pixel_t) * this->img->width);
 	}
 	return new_img;
 }
-
-
 
 void Image::PGM::freeImage(image_t *img)
 {
@@ -384,14 +384,18 @@ image_t* Image::PGM::imageToRGB(image_t* img)
 	switch (img->color_type)
 	{
 		case COLOR_TYPE_INDEX:
+			std::cout << "COLOR_TYPE_INDEX" << std::endl;
 			img = imageIndexToRGB(img);
 			break;
 		case COLOR_TYPE_GRAY:
+			std::cout << "COLOR_TYPE_GRAY" << std::endl;
 			img = imageGrayToRGB(img);
 			break;
 		case COLOR_TYPE_RGB:
+			std::cout << "COLOR_TYPE_RGB" << std::endl;
 			break;
 		case COLOR_TYPE_RGBA:
+			std::cout << "COLOR_TYPE_RGBA" << std::endl;
 			img = imageRGBAToRGB(img, colorFromRGB(255, 255, 255));
 			break;
 	}
@@ -598,7 +602,7 @@ image_t* Image::PGM::imageGrayToRGB(image_t *img)
 		for (x = 0; x < img->width; ++x)
 		{
 			pixel_t *p = &img->map[y][x];
-			const std::uint8_t g = p->g;
+			const std::uint16_t g = p->g;
 			p->c.r = g;
 			p->c.g = g;
 			p->c.b = g;
@@ -777,7 +781,7 @@ result_t Image::PGM::readPNMStream(FILE *fp)
 
 	if (result != SUCCESS)
 	{
-		freeImage(this->img);
+		// freeImage(this->img);
 		return FAILURE;
 		// return NULL;
 	}
@@ -1117,7 +1121,11 @@ result_t Image::PGM::write_p2(FILE *fp)
 	{
 		for (x = 0; x < this->img->width; ++x)
 		{
-			fprintf(fp, "%u\n", this->img->map[y][x].g);
+			if (x % 16 == 0)
+			{
+				if (y != 0 || x != 0) fprintf(fp, "\n");
+			}
+			fprintf(fp, "%4u", this->img->map[y][x].g);
 		}
 	}
 	return SUCCESS;
@@ -1200,8 +1208,8 @@ int main(int argc, char* argv[])
 {
 	result_t result = FAILURE;
 	Image::PGM *pgm = new Image::PGM();
-	// const char *fin = "test1.pgm";
-	const char *fin = "test2.pgm";
+	const char *fin = "test1.pgm";
+	// const char *fin = "test2.pgm";
 	// const char *fin = "whole.pgm";
 	result = pgm->readPNMFile(fin);
 	if (result == SUCCESS)
@@ -1212,7 +1220,7 @@ int main(int argc, char* argv[])
 	{
 		std::cout << "Could not read the image: " << fin << std::endl;
 	}
-	pgm->show();
+	// pgm->show();
 
 	pgm->writePNMFile("result.pgm", 2);
 	// pgm->readPNMFile(const char *filename)
