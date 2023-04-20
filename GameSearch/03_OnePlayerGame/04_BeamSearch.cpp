@@ -6,6 +6,7 @@
 #include <random>
 #include <iostream>
 #include <cassert>
+#include <queue>
 
 // 座標を保持する構造体
 struct Coord
@@ -57,8 +58,9 @@ private:
 
 public:
     Coord character_ = Coord();
-    int game_score_ = 0; // ゲーム上で実際に得たスコア
+    int game_score_ = 0;            // ゲーム上で実際に得たスコア
     ScoreType evaluated_score_ = 0; // 探索上で評価したスコア
+    int first_action_ = -1;         // 探索木のルートノードで最初に選択した行動
     MazeState() {}
 
     // h*w の迷路を生成する。
@@ -163,10 +165,81 @@ public:
     }
 }; // End of class definitions
 
+// [どのゲームでも実装する]: 探索時のソート用に評価を比較する
+// 探索時にノードをソートするために比較演算子を実装する
+bool operator<(const MazeState &maze_1, const MazeState &maze_2)
+{
+    return maze_1.evaluated_score_ < maze_2.evaluated_score_;
+}
+
+using State = MazeState;
+
+// ビーム幅と深さを指定してビームサーチで行動を決定する
+// ビームサーチとは探索アルゴリズムの一種で、探索空間内で最適解を見つける
+// ために使用される。ビームサーチでは各探索ステップで複数の解候補を同時に
+// 保持し、最も有望な解候補のみを選択することによって、効率的に最適解を
+// 見つけることが出来る。
+// ビームとは、探索ステップごとに選択される解候補の集合の事を指す。
+// ビームサーチでは最も有望な解候補のみを選択するために、ビームサイズを
+// 制限する。つまり各ステップで最も有望な解候補の数をあらかじめ決定し、
+// それ以外の解候補を破棄する。
+int beamSearchAction(const State &state, const int beam_width, const int beam_depth)
+{
+    // std::priority_queueは優先順位付きキューを実現するコンテナアダプタである。
+    // 要素をpush()で追加し、top()で取り出す。Compare述語で優先順に要素が取り出される
+    // デフォルトでは降順比較のlessが使用される
+    std::priority_queue<State> now_beam;
+    State best_state;
+
+    now_beam.push(state);
+    // ビーム深さはここでは何ターン先まで探索するかに相当する
+    for (int t = 0; t < beam_depth; t++)
+    {
+        std::priority_queue<State> next_beam;
+        // ビーム幅分だけ解候補を探索する
+        for (int i = 0; i < beam_width; i++)
+        {
+            if (now_beam.empty())
+            {
+                break;
+            }
+
+            // top(): 次の要素にアクセスする
+            State now_state = now_beam.top();
+            // pop(): 次の要素を削除する
+            now_beam.pop();
+            auto legal_actions = now_state.legalActions();
+            for (const auto &action : legal_actions)
+            {
+                State next_state = now_state;
+                next_state.advance(action);
+                next_state.evaluateScore();
+                if (t == 0)
+                {
+                    next_state.first_action_ = action;
+                }
+                next_beam.push(next_state);
+            }
+        }
+
+        now_beam = next_beam;
+        // 探索が終わったタイミングで最も評価が高かった盤面を選べばよい
+        // top()を使えば最も評価の高い状態を取得できる
+        best_state = now_beam.top();
+
+        if (best_state.isDone())
+        {
+            break;
+        }
+    }
+    return best_state.first_action_;
+}
+
+
+
 
 // MazeStateでも実装できるが、各アルゴリズムを数字集めゲーム以外にも適用して
 // 実装することをいしきして、Stateというエイリアスを割り当てた。
-using State = MazeState;
 
 
 // ランダムに行動を決定する
@@ -214,7 +287,8 @@ void testAiScore(const int game_number)
 
         while (!state.isDone())
         {
-            state.advance(randomAction(state));
+            state.advance(beamSearchAction(state, /*beam幅*/ 2,/*beam深さ*/ END_TURN));
+            // state.advance(greedyAction(state));
         }
         auto score = state.game_score_;
         score_mean += score;
