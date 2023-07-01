@@ -1,19 +1,16 @@
 GPP = g++
 RM  = rm -rf
-GPPFLAGS = -Wall -g3 -o2 -std=c++11
+GPPFLAGS = -Wall -g3 -O3 -std=c++11
 
-MODULE  = encoder decoder
-INSTALL = encoder decoder
+MODULE  = codetalker
+INSTALL = codetalker
 INSDIR = ../
 
 .PHONY: all clean install
 
 all: ${MODULE}
 
-encoder: encoder.cpp
-	${GPP} ${GPPFLAGS} -o $@ $<
-
-decoder: decoder.cpp
+codetalker: CodeTalker.cpp
 	${GPP} ${GPPFLAGS} -o $@ $<
 
 install:
