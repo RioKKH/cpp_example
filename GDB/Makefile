@@ -17,3 +17,4 @@ test_ubsan_detail: overflow.cpp
 
 clean:
 	rm -f $(TARGETS)
+
