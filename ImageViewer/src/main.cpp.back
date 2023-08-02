@@ -1,0 +1,138 @@
+#include <gtk/gtk.h>
+
+GtkWidget *image;
+
+void open_image(GtkWidget *widget, gpointer window)
+{
+    GtkWidget *dialog;
+    dialog = gtk_file_chooser_dialog_new(
+            "Open File",
+            GTK_WINDOW(window),
+            GTK_FILE_CHOOSER_ACTION_OPEN,
+            ("_Cancel"),
+            GTK_RESPONSE_CANCEL,
+            ("_Open"),
+            GTK_RESPONSE_ACCEPT,
+            NULL);
+
+    if (gtk_dialog_run(GTK_DIALOG(dialog)) == GTK_RESPONSE_ACCEPT)
+    {
+        char *filename;
+        filename = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(dialog));
+
+        // ピクセルデータと色空間情報を保持するGDKの構造体
+        GdkPixbuf *pixbuf;
+        // 指定された画像ファイルから新しいPixbufを作成する。
+        pixbuf = gdk_pixbuf_new_from_file(filename, NULL);
+        /*
+        // この関数は、指定された幅と高さにPixbufをスケーリングする。
+        pixbuf = gdk_pixbuf_scale_simple(pixbuf, 
+                                         gdk_pixbuf_get_width(pixbuf)/2,
+                                         gdk_pixbuf_get_height(pixbuf)/2, GDK_INTERP_BILINEAR);
+        */
+        // 指定されたPixbufから画像ウィジェットを作成する
+        gtk_image_set_from_pixbuf(GTK_IMAGE(image), pixbuf);
+        // GError *error = NULL;
+
+        // 画像をロードする
+        // gtk_image_set_from_file(GTK_IMAGE(image), filename);
+        /*
+            GtkWidget *dialog;
+            dialog = gtk_message_dialog_new(GTK_WINDOW(window),
+                                            GTK_DIALOG_DESTROY_WITH_PARENT,
+                                            GTK_MESSAGE_ERROR,
+                                            GTK_BUTTONS_CLOSE,
+                                            "Could not open image file: %s",
+                                            error->message);
+            gtk_dialog_run(GTK_DIALOG(dialog));
+            gtk_widget_destroy(dialog);
+            g_error_free(error);
+        }
+        */
+        g_free(filename);
+    }
+    gtk_widget_destroy(dialog);
+}
+
+/**
+ * スライダー(GtkRange)から新しいスケール値を取得し、現在の画像のピクセルバッファを
+ * 取得する。次に、新しいスケール値に基づいてピクセルバッファをスケーリングし、
+ * スケーリングされたピクセルバッファを画像ウィジェットに設定する
+ */
+void zoom_image(GtkRange *range, gpointer user_data) {
+    double scale = gtk_range_get_value(range);
+    GdkPixbuf *pixbuf, *scaled_pixbuf;
+    pixbuf = gtk_image_get_pixbuf(GTK_IMAGE(image));
+    scaled_pixbuf = gdk_pixbuf_scale_simple(pixbuf,
+                                            gdk_pixbuf_get_width(pixbuf) * scale,
+                                            gdk_pixbuf_get_height(pixbuf) * scale,
+                                            GDK_INTERP_BILINEAR);
+    gtk_image_set_from_pixbuf(GTK_IMAGE(image), scaled_pixbuf);
+}
+
+
+int main(int argc, char* argv[])
+{
+    GtkWidget *window;
+    GtkWidget *vbox;
+    GtkWidget *menubar;
+    GtkWidget *fileMenu;
+    GtkWidget *fileMi;
+    GtkWidget *openMi;
+    GtkWidget *scrolled_win;
+    GtkWidget *zoom_slider;
+
+    gtk_init(&argc, &argv);
+
+    // GTKウィンドウの作成と表示
+    window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+
+    // ウィンドウサイズのタイトルとサイズの設定
+    gtk_window_set_title(GTK_WINDOW(window), "Image Viewer");
+    gtk_window_set_default_size(GTK_WINDOW(window), 800, 600);
+
+    vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+
+    // メニューバーの作成と配置
+    menubar = gtk_menu_bar_new();
+    fileMenu = gtk_menu_new();
+
+    // "開く"オプションの作成
+    fileMi = gtk_menu_item_new_with_label("File");
+    openMi = gtk_menu_item_new_with_label("Open");
+
+    gtk_menu_item_set_submenu(GTK_MENU_ITEM(fileMi), fileMenu);
+    gtk_menu_shell_append(GTK_MENU_SHELL(menubar), fileMi);
+    gtk_menu_shell_append(GTK_MENU_SHELL(fileMenu), openMi);
+
+    gtk_box_pack_start(GTK_BOX(vbox), menubar, FALSE, FALSE, 0);
+
+    // 画像を表氏するためのウィジェットを作成する
+    image = gtk_image_new();
+
+    // スクロール可能なウィンドウを作成する。
+    // 引数はそれぞれ水平方向と垂直方向の調整オブジェクト。
+    // ここではNULLを指定しているが、デフォルトの動作を選択になる。
+    scrolled_win = gtk_scrolled_window_new(NULL, NULL);
+
+    // 上で作ったimage ウィジェットを垂直ボックスにパックする
+    // 第3引数と第４引数のTRUEは、子ウィジェットが利用可能なスペースを
+    // 全て埋める事を意味する。最後の引数は子ウィジェット管のスペース
+    // (パディング)を指定する。
+    gtk_box_pack_start(GTK_BOX(vbox), scrolled_win, TRUE, TRUE, 0);
+    // 画像ウィジェットをスクロール可能なウィンドウに追加する。
+    // これにより、画像がウィンドウより大きい場合にはスクロールバーが
+    // 表示される
+    gtk_container_add(GTK_CONTAINER(scrolled_win), image);
+
+    // ボックス全体がウィンドウに追加される
+    gtk_container_add(GTK_CONTAINER(window), vbox);
+
+    g_signal_connect(openMi, "activate", G_CALLBACK(open_image), window);
+
+    gtk_widget_show_all(window);
+
+    gtk_main();
+
+    return 0;
+}
