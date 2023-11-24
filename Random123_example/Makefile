@@ -1,49 +1,30 @@
-CC = gcc
-CPP = g++
-NVCC = nvcc
-GCC_OPTIONS = -Wall --pedantic-error
-GPP_OPTIONS = -std=c++17 -Wall --pedantic-error -D_DEBUG
-NVCC_OPTIONS = -arch=sm_50
-# NVCC_OPTIONS = -arch=sm_52 -D_TREND
-# NVCC_OPTIONS = -arch=sm_86 -D_TREND
-# NVCC_OPTIONS = -arch=sm_86 -D_DEBUG -D_TREND
-# NVCC_OPTIONS = --device-c -arch=sm_86 -D_DEBUG
+# パスとコンパイラの設定
+CUDA_PATH = /usr/local/cuda
+CUDA_BIN_PATH = $(CUDA_PATH)/bin
+CUDA_INCLUDE_PATH = $(CUDA_PATH)/include
+CUDA_LIB_PATH = $(CUDA_PATH)/lib64
+NVCC = $(CUDA_BIN_PATH)/nvcc
 
-GNUOPENMP = -fopenmp
-INTELOPEMP = -openmp
+# Random123のインクルードパス
+RANDOM123_INCLUDE_PATH = /home/rio/work/git/ONEMAX/Random123
 
-APPS = rand uniform return01
+# ターゲットとソースファイル
+TARGET = rand123Philox curand_sample
+#SOURCE = rand123Philox.cu
 
-TARGET = ${APPS}
+# フラグとライブラリの設定
+NVCC_FLAGS = -I$(CUDA_INCLUDE_PATH) -arch=sm_60
+NVCC_FLAGS_RAND123 = -I$(CUDA_INCLUDE_PATH) -I$(RANDOM123_INCLUDE_PATH) -arch=sm_60
+LIBS = -L$(CUDA_LIB_PATH) -lcudart -lcurand
 
-all: ${APPS}
-build: ${APPS}
+# コンパイルルール
+all: $(TARGET)
 
-#Parameters.o: Parameters.cu
-#	$(NVCC) $(NVCC_OPTIONS) -o $@ -c $<
-#
-#CUDAKernels.o: CUDAKernels.cu
-#	$(NVCC) $(NVCC_OPTIONS) -o $@ -c $<
-#
-#Misc.o: Misc.cu
-#	$(NVCC) $(NVCC_OPTIONS) -o $@ -c $<
+rand123Philox: rand123Philox.cu
+	$(NVCC) $(NVCC_FLAGS_RAND123) $^ -o $@ $(LIBS)
 
-CUDAKernels.o : CUDAKernels.cu
-	$(NVCC)  $(NVCC_OPTIONS) -c $< -o $@
-
-rand : main.cu CUDAKernels.o
-	$(NVCC)  $(NVCC_OPTIONS) $^ -o $@
-
-return01 : return_0_or_1.cpp
-	$(CPP) $(GPP_OPTIONS) $^ -o $@
-
-uniform : uniform.cpp
-	${CPP} ${GPP_OPTIONS} $^ -o $@
-
-run: build
+curand_sample: curand_sample.cu
+	$(NVCC) $(NVCC_FLAGS) $^ -o $@ $(LIBS)
 
 clean:
-	rm -f ${APPS}
-	rm -f *.o
-
-clobber: clean
+	rm -f $(TARGET)

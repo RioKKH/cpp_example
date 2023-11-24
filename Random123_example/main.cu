@@ -42,7 +42,8 @@ int main(int argc, char* argv[])
     cudaMalloc((void **)&pdev_rand2, N * sizeof(float));
 
     cudaMemcpy(pdev_rand1, phost_rand1, N * sizeof(float), cudaMemcpyHostToDevice);
-    cudaMemcpy(pdev_rand2, phost_rand2, N * sizeof(float), cudaMemcpyHostToDevice); // cudaMemcpy(phost_rand1, pdev_rand1, N * sizeof(float), cudaMemcpyHostToDevice);
+    cudaMemcpy(pdev_rand2, phost_rand2, N * sizeof(float), cudaMemcpyHostToDevice);
+    // cudaMemcpy(phost_rand1, pdev_rand1, N * sizeof(float), cudaMemcpyHostToDevice);
     // cudaMemcpy(phost_rand2, pdev_rand2, N * sizeof(float), cudaMemcpyHostToDevice);
 
     cudaGetDeviceCount(&n);
@@ -73,9 +74,14 @@ int main(int argc, char* argv[])
         printf("integrate : %s\n", (prop.integrated ? "ON" : "OFF"));
         printf("host memory mapping : %s\n", (prop.canMapHostMemory ? "ON" : "OFF"));
         printf("compute mode : \n");
-        if (prop.computeMode == cudaComputeModeDefault) printf("default mode (multiple threads can be used\n");
-        else if (prop.computeMode == cudaComputeModeExclusive) printf("exclusive mode (only one thread can be used)\n");
-        else if (prop.computeMode == cudaComputeModeProhibited) printf("prohibited mode (no threads can be used\n)");
+
+        if (prop.computeMode == cudaComputeModeDefault) {
+            printf("default mode (multiple threads can be used\n");
+        } else if (prop.computeMode == cudaComputeModeExclusive) {
+            printf("exclusive mode (only one thread can be used)\n");
+        } else if (prop.computeMode == cudaComputeModeProhibited) {
+            printf("prohibited mode (no threads can be used\n)");
+        }
     }
 #endif
     // mMultiProcessorCount = prop.multiProcessorCount;

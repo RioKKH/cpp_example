@@ -55,7 +55,8 @@ __global__ void cudaGenerateRandomNumberKernel(float *rand1,
     for (int i = 0; i < 5; ++i)
     {
         randomValues = generateTwoRndValues(idx+i, randomSeed);
-        printf("%f,%f\n", float(randomValues.v[0]) / RANDMAX,
+        printf("1. %f,%f\n", float(randomValues.v[0]), float(randomValues.v[1]));
+        printf("2. %f,%f\n", float(randomValues.v[0]) / RANDMAX,
                 float(randomValues.v[1]) / RANDMAX);
         // rand1[idx] = float(randomValues.v[0]) / RANDMAX;
         // rand2[idx] = float(randomValues.v[1]) / RANDMAX;
