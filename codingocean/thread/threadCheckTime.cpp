@@ -4,10 +4,44 @@
 using namespace std;
 using namespace std::chrono;
 
-steady_clock::time_point Start;
+// system_clock はシステム全体の時刻を表す
+// steady_clock はモノトニックな時刻を表す
+// steady_clock::time_point start;
+system_clock::time_point start;
 void startTimer() {
-    Start = high_resolution_clock::now();
+    // start = steady_clock::now();
+    start = high_resolution_clock::now();
 }
+
+void stopTimer() {
+    // auto end = steady_clock::now();
+    auto end = high_resolution_clock::now();
+    auto duration = duration_cast<microseconds>(end - start);
+    cout << "duration: " << duration.count() / 1000000.0 << endl;
+}
+
+typedef unsigned long long ull;
+void sumOdd(ull end) {
+    ull sum = 0;
+    for (ull i = 1; i <= end; ++i) {
+        if (i & 1) { //  1bit目が1の場合
+            sum += i;
+        }
+    }
+    cout << "sumOdd: " << sum << endl;
+}
+
+void sumEven(ull end) {
+    ull sum = 0;
+    for (ull i = 1; i <= end; ++i) {
+        if (!(i & 1)) { // 1bit目が0の場合
+            sum += i;
+        }
+    }
+    cout << "sumEven: " << sum << endl;
+}
+
+
 
 void func1(int num) {
     for (int i = 0; i < num; i++) cout << 'o';
@@ -19,12 +53,19 @@ void func2() {
 
 int main() {
 
-    // スレッドに引数を渡す場合
-    thread th1(func1, 300); // create a thread to execute func1
-    thread th2(func2); // create a thread to execute func2
+    ull num = 1000000000;
 
-    th1.join(); // wait for th1 to finish
-    th2.join(); // wait for th2 to finish
+    startTimer();
+    sumOdd(num);
+    sumEven(num);
+    stopTimer();
+
+    startTimer();
+    thread th1(sumOdd, num);
+    thread th2(sumEven, num);
+    th1.join();
+    th2.join();
+    stopTimer();
 
     return 0;
 }
