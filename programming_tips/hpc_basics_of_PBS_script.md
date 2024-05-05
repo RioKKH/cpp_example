@@ -16,6 +16,7 @@ PBSスクリプトは、シェルスクリプトの中にPBSのディレクテ�
     といったものがある。
 
 - `#PBS -l select=<N>:ncpus=<M>:mem=<X>gb`: ノード数、CPU数、メモリの要求を指定します
+
   - JAISTのMPIの場合:
     `-l select=1:ncpus=8:mpiprocs=8`
     といった感じで選ぶことが出来ます。
