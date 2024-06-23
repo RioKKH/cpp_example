@@ -1,7 +1,10 @@
 #include <stdio.h>
+#include <stdlib.h>    // malloc free
+#include <string.h>    // memset memcpy
 #include <proc_service.h>
 #include <stdlib.h>
 #include <type_traits> // extent
+#include <assert.h>    // assert
 
 /**
  * T型のN要素の配列arrの定数参照
@@ -35,9 +38,22 @@ int main() {
 
     // 下のように書くのは面倒
     // size_t numElements = sizeof(src) / sizeof(src[0]);
-    // なのでマクロが用意されている
+    // テンプレート関数を使って配列の要素数を取得する
     size_t numElements = countof(src);
     printf("要素数:%zd\n", numElements);
+
+    GROUP* dst = (GROUP *)malloc(sizeArray);
+    // GROUP* dst = NULL; // assertでエラーを発生させるためにNULLを代入
+    assert(dst != NULL);
+    // 配列の初期化
+    memset(dst, 0, sizeArray);
+    // 配列のコピー
+    memcpy(dst, src, sizeArray);
+
+    for (size_t i = 0; i < numElements; i++) {
+        printf("name:%s num:%d\n", dst[i].name, dst[i].num);
+    }
+    free(dst);
 
     return 0;
 }
