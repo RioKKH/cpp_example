@@ -12,5 +12,9 @@ int main() {
 
     std::cout << "a: " << a << "\n";
     std::cout << "b: " << b << "\n";
+    std::cout << "ref: " << ref << std::endl;
+    ref = 10;
+    std::cout << "a: " << a << "\n"; // a = 10
+    std::cout << "ref: " << ref << std::endl; // ref = 10
     return 0;
 }
