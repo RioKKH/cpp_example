@@ -36,6 +36,13 @@ ImageBuffer b = std::move(a);   // a の中身が b に移る
 ```
 
 ムーブ後のオブジェクトは「有効だが不定」な状態。`data_` が `nullptr` になることを利用して `empty()` 判定ができる。
+中身が`nullptr`ならば`false`, 有効なポインタならば`true`になる。
+
+```cpp
+std::unique_ptr<int> p;
+if (p) { /* 入らない */}
+if (!p) { /* 入る */ }
+```
 
 ## 問題
 

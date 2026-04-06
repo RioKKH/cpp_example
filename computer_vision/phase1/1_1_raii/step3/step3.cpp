@@ -1,6 +1,6 @@
 #include <iostream>
 #include <memory>
-#include <strings>
+#include <string>
 #include <cstdint>
 #include <stdexcept>
 
@@ -16,9 +16,13 @@ public:
 
     // TODO: コピーを禁止してください。
     // (コピーコンストラクタとコピー代入演算子をdelete)
+    ImageBuffer(const ImageBuffer &) = delete;
+    ImageBuffer &operator=(const ImageBuffer &) = delete;
 
     // TODO: ムーブを許可してください。
     // (ムーブコンストラクタとムーブ代入演算子をdefault)
+    ImageBuffer(ImageBuffer &&) = default;
+    ImageBuffer &operator=(ImageBuffer &&) = default;
 
     int width() const { return w_; }
     int height() const { return h_; }
@@ -65,4 +69,27 @@ int main()
     }
 
     // ムーブで所有権を移す
+    ImageBuffer img2 = transferOwnership(std::move(img));
+
+    // ムーブ元は空になっている
+    std::cout << (img.empty() ? "MOVED" : "NOT_MOVED") << std::endl;
+
+    // ムーブ先にデータが残っている
+    std::cout << img2.width() << " " << img2.height() << std::endl;
+
+    // ムーブ先のピクセル値を確認
+    std::string op;
+    int x, y;
+    while (std::cin >> op >> x >> y)
+    {
+        try
+        {
+            std::cout << static_cast<int>(img2.at(x, y)) << std::endl;
+        }
+        catch (const std::out_of_range &e)
+        {
+            std::cout << "ERR" << std::endl;
+        }
+    }
+    return 0;
 }
