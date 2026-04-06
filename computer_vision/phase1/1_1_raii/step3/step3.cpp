@@ -39,4 +39,30 @@ public:
 };
 
 // ムーブで所有権を受け取る関数
-ImageBuffer transferOwnership(ImageBuffer &&src) { k }
+ImageBuffer transferOwnership(ImageBuffer &&src)
+{
+    return std::move(src);
+}
+
+int main()
+{
+    int w, h, n;
+    std::cin >> w >> h >> n;
+    ImageBuffer img(w, h);
+
+    // ピクセル操作
+    for (int i = 0; i < n; ++i)
+    {
+        std::string op;
+        int x, y;
+        std::cin >> op >> x >> y;
+        if (op == "set")
+        {
+            int v; // そのピクセルの値 (value)
+            std::cin >> v;
+            img.at(x, y) = static_cast<uint8_t>(v);
+        }
+    }
+
+    // ムーブで所有権を移す
+}

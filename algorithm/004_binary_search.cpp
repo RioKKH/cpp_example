@@ -26,6 +26,10 @@
  *  具体的なアルゴリズムは本読めば載っている。
  *
  *  A = {1, 3, 5, 8} でBj = 6の場合, upper_boundは8を指す。
+ *
+ *  C++のbinary_search, upper_bound, lower_boundについては
+ *  https://qiita.com/ganyariya/items/33f1326154b85db465c3
+ *  が分かりやすい
  */
 
 int main()
